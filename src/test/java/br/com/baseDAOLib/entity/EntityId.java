@@ -27,6 +27,7 @@ public abstract class EntityId implements Serializable{
 	public void setId(long id) {
 		this.id = id;
 	}
+	
 	@Consist
 	public void peristente(){
 		System.out.println("Entity super");

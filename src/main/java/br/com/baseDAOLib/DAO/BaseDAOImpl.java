@@ -1,7 +1,9 @@
 package br.com.baseDAOLib.DAO;
 
 
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -80,6 +82,35 @@ abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 	
 	public T findEntityForId(long id) {
 		return (T) this.manager.find(entityClass, id);
+	}
+	
+	public<E> List<E> findFieldForProperties(int beginning, int end, String order, String names, Object... values) {
+		try {
+			
+			Class<?> clazz = BaseDAOImpl.class;
+			Method method = null;
+			for(Method m:clazz.getDeclaredMethods()){
+				if(m.getName().equals("findFieldForProperties")){
+					method = m;
+					break;
+				}
+			}
+			Type genericType = method.getGenericParameterTypes()[0];
+			Class<?> c = Class.forName(genericType.getTypeName());
+			CriteriaBuilder builder = manager.getCriteriaBuilder() ;
+			CriteriaQuery<E> criteriaQuery = (CriteriaQuery<E>) builder.createQuery(Class.forName(genericType.getTypeName()));
+			Root<E> root = (Root<E>) criteriaQuery.from(Class.forName(genericType.getTypeName()));
+			
+			return null;
+		}  catch (SecurityException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+		
 	}
 
 

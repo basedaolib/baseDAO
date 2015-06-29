@@ -17,5 +17,7 @@ public abstract interface BaseDAO<T> {
 	
 	public T findEntityForProperties(String names, Object... values);
 	
+	public<E> List<E> findFieldForProperties(int beginning, int end, String order, String names, Object... values);
+	
 	
 }

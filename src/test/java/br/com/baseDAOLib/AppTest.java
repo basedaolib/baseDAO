@@ -36,5 +36,7 @@ public class AppTest
     	System.out.println(usuarioDAO.findEntitiesForProperties(0, 0,"login" , "login>=, email=", "trst", email).size());
     	
     	System.out.println(usuarioDAO.findEntityForProperties("email", email).getLogin());
+    	
+    	System.out.println(usuarioDAO.<String>findFieldForProperties(0, 0,"login" , "login>=, email=", "trst", email).size());
     }
 }
