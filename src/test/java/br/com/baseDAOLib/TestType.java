@@ -14,7 +14,7 @@ public class TestType {
 	@Test
 	public void test() {
 		UsuarioDAO a = new UsuarioDAOImpl();
-		java.util.List<String> xx = a.<String>findFieldForProperties(0, 0, null, null);
+		//java.util.List<String> xx = a.<String>findFieldForProperties(0, 0, null, null);
 	}
 
 }

@@ -1,9 +1,7 @@
 package br.com.baseDAOLib.DAO;
 
 
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -36,7 +34,7 @@ abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 			getClass().getGenericSuperclass()).getActualTypeArguments()[0];
    
     public T save(T entity){
-    	reflection.percorrerAtributos(entity, entity.getClass());
+    	reflection.goFields(entity, entity.getClass());
     	entity = beforeSaving(entity);
 		this.manager.persist(entity);
 		return afterSaving(entity);
@@ -49,7 +47,7 @@ abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 	}
 
 	public T update(T entity){
-		reflection.percorrerAtributos(entity, entity.getClass());
+		reflection.goFields(entity, entity.getClass());
 		entity = beforeUpdate(entity);
 		this.manager.merge(entity);
 		return afterUpdate(entity);
@@ -84,18 +82,6 @@ abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 		return (T) this.manager.find(entityClass, id);
 	}
 	
-	public <E> List<E> findFieldForProperties(int beginning, int end, String order, String names, Object... values) {
-		List<E> x = new ArrayList<E>();
-		ParameterizedType paramType;
-        paramType = (ParameterizedType) x.getClass().getGenericInterfaces()[0];
-        Class<E> entityClass = (Class<E>) paramType.getActualTypeArguments()[0].getClass();
-		return null;
-
-	
-		
-	}
-
-
 	public T findEntityForProperties(String names, Object... values) {
 		List<T> list = findEntitiesForProperties(0, 2, null, names, values);
 		if(list.size() > 1){
@@ -103,6 +89,44 @@ abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 		}
 		return list.get(0);
 	}
+	
+	public <E> List<E> findFieldsForProperties(int beginning, int end, String order, String field, String names, Object... values) {
+		List<E> x = new ArrayList<E>();
+		ParameterizedType paramType;
+        paramType = (ParameterizedType) x.getClass().getGenericInterfaces()[0];
+        Class<E> parameterClass = (Class<E>) paramType.getActualTypeArguments()[0].getClass();
+        
+        
+        CriteriaBuilder builder = manager.getCriteriaBuilder() ;
+		CriteriaQuery<E> criteriaQuery = builder.createQuery(parameterClass);
+		Root<T> root = criteriaQuery.from(entityClass);
+		
+		criteriaQuery.select(root.<E>get(field));
+		
+		criteriaQuery.where(mountWhere(builder, root, buildMap(names, values)));
+		
+		if(order != null)
+			criteriaQuery.orderBy(builder.asc(root.get(order)));
+		
+		TypedQuery<E> query = manager.createQuery((criteriaQuery));
+		
+		if(beginning > 0)
+			query.setFirstResult(beginning);
+		if(end > 0)
+			query.setMaxResults(end);
+		
+		
+		return query.getResultList();
+	}
+	
+	public<E> E findFieldForProperties(String field, String names, Object... values) {
+		List<E> list = this.<E>findFieldsForProperties(0, 2, null,field , names, values);
+		if(list.size() > 1){
+			throw new DuplicateElementException("more than one " + field + " has been found.");
+		}
+		return list.get(0);
+	}
+	
 	
 	protected T beforeSaving(T entity){ return entity;}
 	protected T afterSaving(T entity){ return entity;}

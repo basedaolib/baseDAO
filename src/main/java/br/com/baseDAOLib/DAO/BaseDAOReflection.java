@@ -3,6 +3,7 @@ package br.com.baseDAOLib.DAO;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Entity;
@@ -12,31 +13,40 @@ import br.com.baseDAOLib.DAO.exception.NotedInvokeMethodException;
 
 class BaseDAOReflection {
 	
-	public void percorrerAtributos(Object entity, Class<?> clazz){
-		this.percorrerAtributos(entity, clazz, null);
+	public void goFields(Object entity, Class<?> clazz){
+		this.goFields(entity, clazz, null);
 	}
 	
-	private void percorrerAtributos(Object entity, Class<?> clazz, Method[] ignore){
+	private void goFields(Object entity, Class<?> clazz, Method[] ignore){
 		try {
 			Field[] fields = clazz.getDeclaredFields();
 			for(Field field : fields){
 				field.setAccessible(true);
 				Object value = field.get(entity);
 				if(value != null){
-					if(contemAnotation(field.getType())){
-						this.percorrerAtributos(value, value.getClass());
-					}
+					if(value instanceof Collection<?>){
+						this.goFieldsCollection((Collection<?>) value, value.getClass());
+					}else
+						if(contemAnotation(field.getType())){
+							this.goFields(value, value.getClass());
+						}
 				}
 			}
 			this.executeAnnotatedMethods(entity, clazz, ignore);
 			
 			if(!Object.class.equals(clazz.getSuperclass()))
-				this.percorrerAtributos(entity, clazz.getSuperclass(), clazz.getDeclaredMethods());
+				this.goFields(entity, clazz.getSuperclass(), clazz.getDeclaredMethods());
 			
 		} catch (IllegalArgumentException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void goFieldsCollection(Collection<?> collection, Class<?> clazz){
+		for(Object item : collection){
+			this.goFields(item, item.getClass());
 		}
 	}
 	

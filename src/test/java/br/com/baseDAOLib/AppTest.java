@@ -25,7 +25,7 @@ public class AppTest
 	@Test
     public void testInicio(){
     	Usuario usuario = new Usuario();
-    	usuario.setLogin("trst");
+    	usuario.setLogin("henrique");
     	usuario.setNivel("1");
     	usuario.setSenha("123");
     	Email email = new Email();
@@ -33,10 +33,14 @@ public class AppTest
     	usuario.setEmail(email);
     	usuario = usuarioDAO.save(usuario);
 
-    	System.out.println(usuarioDAO.findEntitiesForProperties(0, 0,"login" , "login>=, email=", "trst", email).size());
+    	System.out.println(usuarioDAO.findEntitiesForProperties( 0, 0, "login", "login>=,email=", "henrique", email ).size());
     	
-    	System.out.println(usuarioDAO.findEntityForProperties("email", email).getLogin());
+    	System.out.println(usuarioDAO.findEntityForProperties( "email", email ).getLogin());
     	
-    	System.out.println(usuarioDAO.<String>findFieldForProperties(0, 0,"login" , "login>=, email=", "trst", email).size());
+    	System.out.println(usuarioDAO.<String>findFieldsForProperties(0, 0, null, "login", "login", "henrique").size());
+    	
+    	System.out.println(usuarioDAO.<String>findFieldForProperties("login", "login", "henrique"));
+    	
+    	System.out.println(usuarioDAO.<String>findFieldForProperties("login", "login", "henrique") instanceof String);
     }
 }
