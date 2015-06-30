@@ -47,11 +47,6 @@ public class Usuario extends EntityId{
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
-	
-	
-
-
-
 
 	public Email getEmail() {
 		return email;
