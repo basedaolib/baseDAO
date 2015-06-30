@@ -1,5 +1,7 @@
 package br.com.baseDAOLib;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import junit.framework.TestCase;
@@ -31,8 +33,9 @@ public class AppTest
     	Email email = new Email();
     	email.setEmail("fsdfs@dds.com.br");
     	usuario.setEmail(email);
-    	usuario = usuarioDAO.save(usuario);
-
+    	usuario = usuarioDAO.insert(usuario);
+    	
+    	
     	System.out.println(usuarioDAO.findEntitiesForProperties( 0, 0, "login", "login>=,email=", "henrique", email ).size());
     	
     	System.out.println(usuarioDAO.findEntityForProperties( "email", email ).getLogin());

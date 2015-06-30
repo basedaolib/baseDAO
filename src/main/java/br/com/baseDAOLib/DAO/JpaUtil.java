@@ -1,6 +1,5 @@
 package br.com.baseDAOLib.DAO;
 
-import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -17,12 +16,4 @@ class JpaUtil {
 		manager.getTransaction().begin();
 		return manager;
 	}
-	
-	public void finaliza(@Disposes EntityManager manager) {
-		manager.getTransaction().commit();
-		
-		if(manager.isOpen())
-			manager.close();
-	}
-	
 }

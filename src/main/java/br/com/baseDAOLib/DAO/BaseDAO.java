@@ -5,11 +5,13 @@ import java.util.List;
 
 public abstract interface BaseDAO<T> {
 
-	public T save(T entity);
+	public T insert(T entity);
 
 	public T delete(T entity);
 
 	public T update(T entity);
+	
+	public T disassociate(T entity);
 
 	public T findEntityForId(long id);
 	

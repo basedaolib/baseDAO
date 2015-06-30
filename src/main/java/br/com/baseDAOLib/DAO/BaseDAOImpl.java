@@ -28,16 +28,14 @@ abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 	@Inject
 	private EntityManager manager;
 	
-	private BaseDAOReflection reflection = new BaseDAOReflection();
 	
 	private final Class<T> entityClass = (Class<T>) ((ParameterizedType) 
 			getClass().getGenericSuperclass()).getActualTypeArguments()[0];
    
-    public T save(T entity){
-    	reflection.goFields(entity, entity.getClass());
-    	entity = beforeSaving(entity);
+    public T insert(T entity){
+    	entity = beforeInsert(entity);
 		this.manager.persist(entity);
-		return afterSaving(entity);
+		return afterInsert(entity);
 	}
 
 	public T delete(T entity){
@@ -47,11 +45,15 @@ abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 	}
 
 	public T update(T entity){
-		reflection.goFields(entity, entity.getClass());
 		entity = beforeUpdate(entity);
 		this.manager.merge(entity);
 		return afterUpdate(entity);
 	
+	}
+	
+	public T disassociate(T entity){
+		manager.detach(entity);
+		return entity;
 	}
 	
 	public List<T> findEntitiesForProperties(int beginning, int end, String order, String names, Object... values) {
@@ -128,8 +130,8 @@ abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 	}
 	
 	
-	protected T beforeSaving(T entity){ return entity;}
-	protected T afterSaving(T entity){ return entity;}
+	protected T beforeInsert(T entity){ return entity;}
+	protected T afterInsert(T entity){ return entity;}
 	
 	protected T beforeDelete(T entity){ return entity;}
 	protected T afterDelete(T entity){ return entity;}

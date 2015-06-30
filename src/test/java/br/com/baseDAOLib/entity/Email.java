@@ -1,14 +1,14 @@
 package br.com.baseDAOLib.entity;
 
 import javax.persistence.Embeddable;
-
-import br.com.baseDAOLib.DAO.annotation.Consist;
+import javax.persistence.PrePersist;
 
 @Embeddable
 public class Email {
 
 	private String email;
-	@Consist
+	
+	@PrePersist
 	public void con(){
 		System.out.println("Embeddable");
 	}

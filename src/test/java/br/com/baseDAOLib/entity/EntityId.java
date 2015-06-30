@@ -5,8 +5,7 @@ import java.io.Serializable;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
-
-import br.com.baseDAOLib.DAO.annotation.Consist;
+import javax.persistence.PrePersist;
 
 
 @MappedSuperclass
@@ -22,13 +21,11 @@ public abstract class EntityId implements Serializable{
 		return id;
 	}
 	
-	
-	
 	public void setId(long id) {
 		this.id = id;
 	}
 	
-	@Consist
+	@PrePersist
 	public void peristente(){
 		System.out.println("Entity super");
 		

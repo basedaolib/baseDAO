@@ -2,8 +2,7 @@ package br.com.baseDAOLib.entity;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
-
-import br.com.baseDAOLib.DAO.annotation.Consist;
+import javax.persistence.PrePersist;
 
 
 @Entity
@@ -110,9 +109,9 @@ public class Usuario extends EntityId{
 			return false;
 		return true;
 	}
+	
 
-
-	@Consist
+	@PrePersist
 	public void peristente() {
 		System.out.println("Entity");
 		
