@@ -4,7 +4,6 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.PrePersist;
 //test
-//2
 
 @Entity
 public class Usuario extends EntityId{
