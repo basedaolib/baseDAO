@@ -3,7 +3,7 @@ package br.com.baseDAOLib.entity;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.PrePersist;
-
+//test
 
 @Entity
 public class Usuario extends EntityId{
