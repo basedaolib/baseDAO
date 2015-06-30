@@ -6,6 +6,7 @@ import javax.persistence.PrePersist;
 //test
 //2
 //
+//123
 @Entity
 public class Usuario extends EntityId{
 
