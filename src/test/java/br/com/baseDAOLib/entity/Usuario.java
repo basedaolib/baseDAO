@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.PrePersist;
 @Entity
 //ccd
+//14213
 public class Usuario extends EntityId{
 
 	private static final long serialVersionUID = -3327573295169448466L;
