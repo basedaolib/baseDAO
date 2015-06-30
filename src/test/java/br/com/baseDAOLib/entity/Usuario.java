@@ -4,8 +4,7 @@ import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.PrePersist;
 @Entity
-//flavio
-//mmm543132fsdfsdfsd
+
 public class Usuario extends EntityId{
 
 	private static final long serialVersionUID = -3327573295169448466L;
