@@ -1,7 +1,5 @@
 package br.com.baseDAOLib;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
 import junit.framework.TestCase;

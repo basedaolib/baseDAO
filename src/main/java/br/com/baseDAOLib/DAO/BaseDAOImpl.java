@@ -23,7 +23,7 @@ import com.mchange.util.DuplicateElementException;
  * @author henrique
  */
 @SuppressWarnings("unchecked")
-abstract class BaseDAOImpl<T> implements BaseDAO<T>{
+public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 	
 	@Inject
 	private EntityManager manager;
