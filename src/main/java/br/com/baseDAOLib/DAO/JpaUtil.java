@@ -1,5 +1,6 @@
 package br.com.baseDAOLib.DAO;
 
+import javax.enterprise.context.RequestScoped;
 import javax.enterprise.inject.Produces;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -13,7 +14,6 @@ class JpaUtil {
 	@Produces
 	public EntityManager getEntityManager(){
 		EntityManager manager = factory.createEntityManager();
-		manager.getTransaction().begin();
 		return manager;
 	}
 }
