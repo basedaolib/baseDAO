@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -64,7 +65,8 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 		
 		criteriaQuery.select(root) ;
 		
-		criteriaQuery.where(mountWhere(builder, root, buildMap(names, values)));
+		if(names != null)
+			criteriaQuery.where(mountWhere(builder, root, buildMap(names, values)));
 		
 		if(order != null)
 			criteriaQuery.orderBy(builder.asc(root.get(order)));
@@ -93,9 +95,8 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 	}
 	
 	public <E> List<E> findFieldsForProperties(int beginning, int end, String order, String field, String names, Object... values) {
-		List<E> x = new ArrayList<E>();
 		ParameterizedType paramType;
-        paramType = (ParameterizedType) x.getClass().getGenericInterfaces()[0];
+        paramType = (ParameterizedType) new ArrayList<E>().getClass().getGenericInterfaces()[0];
         Class<E> parameterClass = (Class<E>) paramType.getActualTypeArguments()[0].getClass();
         
         
@@ -139,10 +140,6 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 	protected T beforeUpdate(T entity){ return entity;}
 	protected T afterUpdate(T entity){ return entity;}
 
-	protected EntityManager getEntityManager(){
-		return manager;
-	}
-	
 	private List<Parameter> buildMap(String names, Object... values){
 		List<Parameter> parameters = new ArrayList<Parameter>();
 		Parameter parameter = null;
@@ -215,8 +212,8 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 				break;
 			case like:
 				validateString(parameter);
-				predicate = builder.like(root.<String>get(parameter.getProperty()), "%" + (
-						(String) parameter.getValue()) + "%");
+				predicate = builder.like(root.<String>get(parameter.getProperty()),
+						(String) parameter.getValue());
 				break;
 		default:
 			predicate = builder.equal(root.get(parameter.getProperty()), parameter.getValue());
@@ -238,6 +235,14 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 			throw new PredicateInvalidException("the attribute "+ 
 					parameter.getProperty() +" must implement comparable to use LIKE.");
 		}
+	}
+	
+	public EntityManager getEntityManager() {
+		return manager;
+	}
+
+	public void setEntityManager(EntityManager manager) {
+		this.manager = manager;
 	}
 			
 }

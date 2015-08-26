@@ -8,7 +8,7 @@ public enum Predicates {
 	greaterThan(">"),
 	lessThan("<"),
 	equal("="),
-	like("LIKE");
+	like("=@=");
 	
 	private String value;
 	

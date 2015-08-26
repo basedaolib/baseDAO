@@ -1,5 +1,7 @@
 package br.com.baseDAOLib;
 
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import junit.framework.TestCase;
@@ -34,14 +36,5 @@ public class AppTest
     	usuario = usuarioDAO.insert(usuario);
     	
     	
-    	System.out.println(usuarioDAO.findEntitiesForProperties( 0, 0, "login", "login>=,email=", "henrique", email ).size());
-    	
-    	System.out.println(usuarioDAO.findEntityForProperties( "email", email ).getLogin());
-    	
-    	System.out.println(usuarioDAO.<String>findFieldsForProperties(0, 0, null, "login", "login", "henrique").size());
-    	
-    	System.out.println(usuarioDAO.<String>findFieldForProperties("login", "login", "henrique"));
-    	
-    	System.out.println(usuarioDAO.<String>findFieldForProperties("login", "login", "henrique") instanceof String);
     }
 }

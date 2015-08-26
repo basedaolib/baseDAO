@@ -3,6 +3,8 @@ package br.com.baseDAOLib.entity;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.PrePersist;
+
+
 @Entity
 public class Usuario extends EntityId{
 
@@ -45,6 +47,11 @@ public class Usuario extends EntityId{
 	public void setSenha(String senha) {
 		this.senha = senha;
 	}
+	
+	
+
+
+
 
 	public Email getEmail() {
 		return email;

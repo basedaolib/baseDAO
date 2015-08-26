@@ -2,14 +2,14 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>br.com.baseDAO</groupId>
-  <artifactId>baseDAO</artifactId>
-  <version>0.0.5</version>
+  <groupId>br.com.base</groupId>
+  <artifactId>BaseDAO-core</artifactId>
+  <version>0.0.1</version>
   <packaging>jar</packaging>
 
-  <name>BaseDAO</name>
+  <name>baseDAO-core</name>
   <url>http://maven.apache.org</url>
-    
+
 	<build>
 	    <plugins>
 	        <plugin>
@@ -18,22 +18,8 @@
 	            <version>3.1</version>
 	            <configuration>
 	                <source>1.6</source>
-	                <target>1.8</target>
+	                <target>1.6</target>
 	            </configuration>
-	        </plugin>
-	        <plugin>
-	        	<groupId>org.apache.maven.plugins</groupId>
-	        	<artifactId>maven-source-plugin</artifactId>
-	        	<version>2.4</version>
-	        	 <executions>
-		          <execution>
-		            <id>attach-sources</id>
-		            <phase>package</phase>
-		            <goals>
-		              <goal>jar</goal>
-		            </goals>
-		          </execution>
-		        </executions>
 	        </plugin>
 	    </plugins>
 	</build>
