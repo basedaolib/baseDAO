@@ -31,6 +31,8 @@ public abstract interface BaseDAO<T> {
 
 	public T findEntityForId(long id);
 	
+	public List<T> list(int beginning, int end, String order);
+	
 	public List<T> findEntitiesForProperties(int beginning, int end, String order, String names, Object... values);
 	
 	public T findEntityForProperties(String names, Object... values);

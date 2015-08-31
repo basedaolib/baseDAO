@@ -57,6 +57,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 
 	public T delete(T entity){
 		entity = beforeDelete(entity);
+		entity = this.manager.merge(entity);
 		this.manager.remove(entity);
 		return afterDelete(entity);
 	}
@@ -71,6 +72,24 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 	public T disassociate(T entity){
 		manager.detach(entity);
 		return entity;
+	}
+	public List<T> list(int beginning, int end, String order){
+		CriteriaBuilder builder = manager.getCriteriaBuilder() ;
+		CriteriaQuery<T> criteriaQuery = builder.createQuery(entityClass);
+		Root<T> root = criteriaQuery.from(entityClass);
+		criteriaQuery.select(root) ;
+		if(order != null)
+			criteriaQuery.orderBy(builder.asc(root.get(order)));
+		
+		TypedQuery<T> query = manager.createQuery((criteriaQuery));
+		
+		if(beginning > 0)
+			query.setFirstResult(beginning);
+		if(end > 0)
+			query.setMaxResults(end);
+		
+		
+		return query.getResultList();
 	}
 	
 	public List<T> findEntitiesForProperties(int beginning, int end, String order, String names, Object... values) {
