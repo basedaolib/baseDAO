@@ -22,8 +22,8 @@ public enum Predicates {
 	lessThanOrEqualTo("<="),
 	greaterThan(">"),
 	lessThan("<"),
-	equal("="),
-	like("=@=");
+	like("+"),
+	equal("=");//colocar esse por ultimo
 	
 	private String value;
 	
