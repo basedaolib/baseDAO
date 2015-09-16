@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
@@ -31,9 +30,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import br.com.baseDAOLib.DAO.exception.PredicateInvalidException;
-
 import com.mchange.util.DuplicateElementException;
+
+import br.com.baseDAOLib.DAO.exception.PredicateInvalidException;
 
 /**
  *
@@ -50,7 +49,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 			getClass().getGenericSuperclass()).getActualTypeArguments()[0];
    
     public T insert(T entity){
-    	entity = beforeInsert(entity);
+    	entity = beforeInsert( consist(entity));
 		this.manager.persist(entity);
 		return afterInsert(entity);
 	}
@@ -63,7 +62,7 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 	}
 
 	public T update(T entity){
-		entity = beforeUpdate(entity);
+		entity = beforeUpdate( consist(entity));
 		this.manager.merge(entity);
 		return afterUpdate(entity);
 	
@@ -126,7 +125,11 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 		if(list.size() > 1){
 			throw new DuplicateElementException("more than one " + entityClass.getSimpleName() + " has been found.");
 		}
-		return list.get(0);
+		if(list.isEmpty()){
+			return null;
+		}else{
+			return list.get(0);
+		}
 	}
 	
 	public <E> List<E> findFieldsForProperties(int beginning, int end, String order, String field, String names, Object... values) {
@@ -162,9 +165,14 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 		if(list.size() > 1){
 			throw new DuplicateElementException("more than one " + field + " has been found.");
 		}
-		return list.get(0);
+		if(list.isEmpty()){
+			return null;
+		}else{
+			return list.get(0);
+		}
 	}
 	
+	protected T consist(T entity){ return entity;}
 	
 	protected T beforeInsert(T entity){ return entity;}
 	protected T afterInsert(T entity){ return entity;}
