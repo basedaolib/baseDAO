@@ -30,9 +30,9 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
-import com.mchange.util.DuplicateElementException;
-
 import br.com.baseDAOLib.DAO.exception.PredicateInvalidException;
+
+import com.mchange.util.DuplicateElementException;
 
 /**
  *
@@ -216,55 +216,16 @@ public abstract class BaseDAOImpl<T> implements BaseDAO<T>{
 		return Predicates.equal;
 	}
 	
-	private Predicate[] mountWhere(CriteriaBuilder builder, Root<T> root, List<Parameter> maps){
-		Predicate[] predicates = new Predicate[maps.size()];
+	private Predicate[] mountWhere(CriteriaBuilder builder, Root<T> root, List<Parameter> parameters){
+		Predicate[] predicates = new Predicate[parameters.size()];
 		
-		for(int i = 0; i < maps.size(); i++){
-			predicates[i] = this.createPredicate(builder, root, maps.get(i));
+		for(int i = 0; i < parameters.size(); i++){
+			predicates[i] = parameters.get(i).getPredicates().getPredicate(builder, root, parameters.get(i));
 		}
 		
 		return predicates;
 	}
 	
-	@SuppressWarnings("rawtypes")
-	private Predicate createPredicate(CriteriaBuilder builder, Root<T> root, Parameter parameter){
-		Predicate predicate = null;
-		switch (parameter.getPredicates()) {
-			case notEqual:
-				predicate = builder.notEqual(root.get(parameter.getProperty()), parameter.getValue());
-				break;
-			case greaterThan:
-				validateComparable(parameter);
-				predicate = builder.greaterThan(root.<Comparable>get(parameter.getProperty()), 
-						(Comparable) parameter.getValue());
-				break;
-			case greaterThanOrEqualTo:
-				validateComparable(parameter);
-				predicate = builder.greaterThanOrEqualTo(root.<Comparable>get(parameter.getProperty()), 
-						(Comparable) parameter.getValue());
-				break;
-			case lessThan:
-				validateComparable(parameter);
-				predicate = builder.lessThan(root.<Comparable>get(parameter.getProperty()), 
-						(Comparable) parameter.getValue());
-				break;
-			case lessThanOrEqualTo:
-				validateComparable(parameter);
-				predicate = builder.lessThan(root.<Comparable>get(parameter.getProperty()), 
-						(Comparable) parameter.getValue());
-				break;
-			case like:
-				validateString(parameter);
-				predicate = builder.like(root.<String>get(parameter.getProperty()),
-						(String) parameter.getValue());
-				break;
-		default:
-			predicate = builder.equal(root.get(parameter.getProperty()), parameter.getValue());
-			break;
-		}
-		
-		return predicate;
-	}
 	
 	public void validateComparable(Parameter parameter){
 		if(!(parameter.getValue() instanceof Comparable)) {

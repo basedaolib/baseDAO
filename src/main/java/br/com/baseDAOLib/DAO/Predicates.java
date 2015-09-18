@@ -15,22 +15,124 @@
 */
 package br.com.baseDAOLib.DAO;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Path;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 
 public enum Predicates {
-	notEqual("!="),
-	greaterThanOrEqualTo(">="),
-	lessThanOrEqualTo("<="),
-	greaterThan(">"),
-	lessThan("<"),
-	like("+"),
-	equal("=");//colocar esse por ultimo
+	notEqual("!=") {
+		@Override
+		public <T> Predicate getPredicate(CriteriaBuilder builder,
+				Root<T> root, Parameter parameter) {
+			String property = parameter.getProperty();
+			
+			return builder.notEqual(this.<T>getPath(root, property)
+					.get(getLastProperty(property)), parameter.getValue());
+		}
+	},
+	
+	greaterThanOrEqualTo(">=") {
+		@Override
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		public <T> Predicate getPredicate(CriteriaBuilder builder,
+				Root<T> root, Parameter parameter) {
+			String property = parameter.getProperty();
+
+			
+			return builder.greaterThanOrEqualTo(this.<T>getPath(root, property)
+					.<Comparable>get(getLastProperty(property)), (Comparable) parameter.getValue());
+		}
+	},
+	
+	lessThanOrEqualTo("<=") {
+		@Override
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		public <T> Predicate getPredicate(CriteriaBuilder builder,
+				Root<T> root, Parameter parameter) {
+			String property = parameter.getProperty();
+			return builder.lessThan(this.<T>getPath(root, property)
+					.<Comparable>get(getLastProperty(property)), (Comparable) parameter.getValue());
+		}
+	},
+	
+	greaterThan(">") {
+		@Override
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		public <T> Predicate getPredicate(CriteriaBuilder builder,
+				Root<T> root, Parameter parameter) {
+			String property = parameter.getProperty();
+			return builder.greaterThan(this.<T>getPath(root, property)
+					.<Comparable>get(getLastProperty(property)), (Comparable) parameter.getValue());
+		}
+	},
+	
+	lessThan("<") {
+		@Override
+		@SuppressWarnings({ "unchecked", "rawtypes" })
+		public <T> Predicate getPredicate(CriteriaBuilder builder,
+				Root<T> root, Parameter parameter) {
+			String property = parameter.getProperty();
+			return builder.lessThan(this.<T>getPath(root, property)
+					.<Comparable>get(getLastProperty(property)), (Comparable) parameter.getValue());
+		}
+	},
+	
+	like("+") {
+		@Override
+		public <T> Predicate getPredicate(CriteriaBuilder builder,
+				Root<T> root, Parameter parameter) {
+			String property = parameter.getProperty();
+			return builder.like(this.<T>getPath(root, property)
+					.<String>get(getLastProperty(property)), (String) parameter.getValue());
+		}
+	},
+	
+	//sempre colocar esse por ultimo
+	equal("=") {
+		@Override
+		public <T> Predicate getPredicate(CriteriaBuilder builder,
+				Root<T> root, Parameter parameter) {
+			String property = parameter.getProperty();
+			return builder.equal(this.<T>getPath(root, property)
+					.get(getLastProperty(property)), parameter.getValue());
+		}
+	};
+	
 	
 	private String value;
 	
 	private Predicates(String value){
 		this.value = value;
 	}
+	
+	public abstract <T> Predicate getPredicate(CriteriaBuilder builder, Root<T> root, Parameter parameter);
 
+	protected <T> Path<T> getPath(Root<T> root, String properties){
+		
+		if(properties.contains(".")){
+			String[] ropertys =  properties.split("\\.");
+			
+			Path<T> path = root;
+			
+			for(int i = 0 ; i < (ropertys.length - 1) ; i++){
+				path = root.get(ropertys[i]);
+			}
+			return path;
+		}else{
+			return root;
+		}
+	}
+	
+	protected String getLastProperty(String property){
+		if(property.contains(".")){
+			return property.substring(property.lastIndexOf(".") + 1);
+		}else{
+			return property;
+		}
+	}
+	
 	public String getValue() {
 		return value;
 	}
